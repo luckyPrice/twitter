@@ -8,6 +8,7 @@ import {
     signInWithPopup,
     } from "firebase/auth";
 
+
     const inputStyles = {};
 
 const AuthForm = () => {
@@ -24,15 +25,19 @@ const AuthForm = () => {
         }
     };
     const onSubmit = async(event) => {
-        // event.preventDafault();
+        //event.preventDafault();
          try{
              let data;
              const auth = getAuth();
          if(newAccount){
              data = await createUserWithEmailAndPassword(auth, email, password);
+             console.log("real")
+             
          }else{
              data = await signInWithEmailAndPassword(auth, email, password);
+             
          }
+        
          console.log(data);
      }catch(error){
          setError(error.message);

@@ -269,6 +269,23 @@ form {
   height: 400px;
 }
 
+.profileicon{
+  position: relative;
+  right : 10px;
+  top : -22px;
+}
+
+.textview{
+  position: relative;
+  top : 25px;
+  right : 10px;
+}
+
+.favorcount{
+  position: relative;
+  right: -240px;
+  top: 305px;
+}
 
 
 .nweet h4 {
@@ -306,6 +323,12 @@ form {
 
 .nweet__actions span:first-child {
   margin-right: 10px;
+}
+
+.heart{
+  position: relative;
+  right: -260px;
+  top: 290px;
 }
 
 /* Auth */

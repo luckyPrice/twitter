@@ -10,6 +10,7 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
 
+
 const AppRouter = ({refreshUser, isLoggedIn, userObj}) => {
     
     return (
@@ -27,12 +28,14 @@ const AppRouter = ({refreshUser, isLoggedIn, userObj}) => {
                   justifyContent: "center",
                 }}
               >
+                
                 <Route exact path="/">
                     <Home userObj = {userObj} />
                 </Route>
                 <Route exact path="/profile">
                     <Profile userObj={userObj} refreshUser={refreshUser}/>
                 </Route>
+                
                 
                 </div>
                 ) : (

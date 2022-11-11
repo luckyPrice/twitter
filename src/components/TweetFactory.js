@@ -9,6 +9,7 @@ import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { updateDoc }from "firebase/firestore";
 import { doc }from "firebase/firestore";
 import {Link} from "react-router-dom";
+import { authService } from "fBase";
 
 const TweetFactory = ({userObj}) => {
     const [tweet, setTweet] = useState("");
@@ -43,6 +44,9 @@ const TweetFactory = ({userObj}) => {
             attachmentUrl,
             count: 1,
             hashTag: "#" + hashtag,
+            user: authService.currentUser.email,
+            heart: 0,
+            heartuser : [],
             };
         await addDoc(collection(dbService, "tweets"), tweetObj);
         
@@ -85,7 +89,9 @@ const TweetFactory = ({userObj}) => {
 };
     
     const onFind = (event) => {
-      console.log(tweet);
+      
+      console.log(authService.currentUser.email)
+     
       if(tweet==""){
         for(let i = 0 ; i < tweets.length; i++){
           updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
@@ -209,7 +215,7 @@ const TweetFactory = ({userObj}) => {
             
             {tweets.map((tweet) => (
                 (tweet.count == 1 &&
-                <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid}/>)
+                <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid}/>)
             ))}
         </div>
         
