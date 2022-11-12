@@ -17,6 +17,7 @@ const TweetFactory = ({userObj}) => {
     const [attachment, setAttachment] = useState("");
     const [hashtag, setHashTag] = useState("");
     const [posting, setPosting] = useState(false);
+    const [profile, setProfile] = useState(true);
     const onSubmit = async (event) => {
         if (tweet === "") {
             return;
@@ -47,14 +48,18 @@ const TweetFactory = ({userObj}) => {
             user: authService.currentUser.email,
             heart: 0,
             heartuser : [],
+            view : 0,
+            
             };
         await addDoc(collection(dbService, "tweets"), tweetObj);
         
         setTweet("");
         setAttachment("");
         togglePosting();
+        console.log(posting)
         
     };
+    
 
     useEffect(() => {
       const q = query(
@@ -68,6 +73,7 @@ const TweetFactory = ({userObj}) => {
           }));
       setTweets(tweetArr);
           });
+          console.log("howmany?");
   }, []);
     const onChange = (event) =>{
         const {target:{value}, } = event;
@@ -98,6 +104,7 @@ const TweetFactory = ({userObj}) => {
             count: 1,
             });
           }
+          console.log("first");
       }
       else{
         for(let i = 0 ; i < tweets.length; i++){
@@ -109,12 +116,13 @@ const TweetFactory = ({userObj}) => {
             updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
               count: 0,
               });
+              console.log("second");
           }
         }
       }
       
       console.log(tweets.length);
-      //console.log(search);
+      
     };
     const togglePosting = () => setPosting(prev => !prev);
     
@@ -188,6 +196,7 @@ const TweetFactory = ({userObj}) => {
         </form>
         </>
         :
+        profile ? 
         <>
         
         <span onClick={togglePosting} className="postBtn">
@@ -211,6 +220,8 @@ const TweetFactory = ({userObj}) => {
           
           </form>
         <div style={{ marginTop: 30 }}>
+
+          
             
             
             {tweets.map((tweet) => (
@@ -220,6 +231,9 @@ const TweetFactory = ({userObj}) => {
         </div>
         
         
+    </>
+    : 
+    <>
     </>
     )
 }

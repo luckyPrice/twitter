@@ -84,6 +84,21 @@ form {
     
   }
 
+  .followBtn {
+    position: relative;
+    cursor: pointer;
+    top : 25px;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    background-color: #04aaff;
+    cursor: pointer;
+    margin-bottom: 20px;
+    
+  }
+
 
 .cancelBtn {
   cursor: pointer;

@@ -63,34 +63,16 @@ const Home = ({userObj}) => {
                 const userObj = {
                     displayName: user.email,
                     uid: user.uid,
+                    following: 0, // 팔로잉 내가 한사람
+                followings: [],
+                follow: 0, // 팔로우 해준 사람
+                follows: [],
                     };
                 addDoc(collection(dbService, "users"), userObj);
             }
            // setUsers(userArr);
         });
-            /*console.log(users)
-            console.log(users.length)
-            for(let i = 0 ; i < users.length; i++){
-                console.log("what?")
-            }*/
-
-          /*let i = 0;
-          querySnapshot.forEach((doc) =>{
-            console.log("?")
-            if(doc.data().uid == user.uid){
-              
-              i = 1;
-            }
             
-          });
-          if(i == 0){
-            console.log("???")
-            const userObj = {
-              displayName: user.email,
-              uid: user.uid,
-              };
-          addDoc(collection(dbService, "users"), userObj);
-          }*/
             
     }, []);
     
@@ -101,15 +83,7 @@ const Home = ({userObj}) => {
     
 
 
-/*if (user !== null) {
-  user.providerData.forEach((profile) => {
-    console.log("Sign-in provider: " + profile.providerId);
-    console.log("  Provider-specific UID: " + profile.uid);
-    console.log("  Name: " + profile.displayName);
-    console.log("  Email: " + profile.email);
-    console.log("  Photo URL: " + profile.photoURL);
-  });
-}*/
+
     
 
     

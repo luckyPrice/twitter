@@ -4,9 +4,10 @@ import { doc, deleteDoc, updateDoc }from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {Route} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPencilAlt, faHeartBroken, faHeartCircleMinus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPencilAlt, faHeartBroken, faHeartCircleMinus, faPersonWalkingDashedLineArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faUserCircle, faHeart } from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
+import {orderBy, onSnapshot, query, getDocs, addDoc, collection } from "firebase/firestore";
 
 const Tweet = ({tweetObj, isOwner, currentuser}) => {
     const [editing, setEditing] = useState(false);
@@ -14,6 +15,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
     const [heart, setHeart] = useState(false);
     const TweetTextRef =doc(dbService, "tweets", `${tweetObj.id}`);
     const [heartuserlist, setHeartuserlist] = useState(tweetObj.heartuser);
+    const [tweets, setTweets] = useState([]);
 
     useEffect(() => {
         for(let i = 0 ; i < tweetObj.heart ; i++){
@@ -23,6 +25,55 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
             }
         }
     }, []);
+
+    const gotoProfile = (event) => {
+        console.log("input");
+        event.preventDefault();
+        
+        const q = query(
+            
+            collection(dbService, "tweets"),
+            orderBy("createdAt", "desc")
+            );
+            
+             onSnapshot(q, (snapshot) => {
+            const tweetArr = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            }));
+            
+            console.log(tweetArr);
+            setTweets(tweetArr);
+            
+            
+            
+            });
+            
+            
+            console.log(tweets.length);
+            
+            for(let i = 0 ; i < tweets.length; i++){
+                if(tweets[i].creatorId != currentuser){
+                    updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
+                        count: 0,
+                        });
+                    console.log("third");
+                    console.log(currentuser);
+                    
+                    }
+                    else{
+                        updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
+                            count: 1,
+                            });
+                        }
+                        const p = query(
+                            collection(dbService, "users"));
+                        console.log("fourth");
+                    }
+            
+        
+
+    }
 
     const onDeleteClick = async () => {
         const ok = window.confirm("Are you sure you want to delete this tweet?");
@@ -101,9 +152,9 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                 <>
                 <h4 className="textview">{tweetObj.text}</h4>
                 {tweetObj.attachmentUrl && <img src={tweetObj.attachmentUrl} className="pic" />}
-                
+                <span onClick={gotoProfile}>
                 <FontAwesomeIcon icon={faUserCircle} color={"#04AAFF"} size="2x" className="profileicon" />
-                
+                </span>
                 <h4 className="favorcount">{tweetObj.heart}</h4>
                 <h3>{tweetObj.hashTag}</h3>
                 {isOwner && (

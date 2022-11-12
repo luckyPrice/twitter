@@ -9,6 +9,7 @@ import Auth from "routes/Auth";
 import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
+import Friend from "routes/Friend";
 
 
 const AppRouter = ({refreshUser, isLoggedIn, userObj}) => {
@@ -34,6 +35,9 @@ const AppRouter = ({refreshUser, isLoggedIn, userObj}) => {
                 </Route>
                 <Route exact path="/profile">
                     <Profile userObj={userObj} refreshUser={refreshUser}/>
+                </Route>
+                <Route exact path="/friend">
+                    <Friend userObj={userObj} refreshUser={refreshUser}/>
                 </Route>
                 
                 

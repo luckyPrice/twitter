@@ -20,6 +20,10 @@ function App() {
         setUserObj({
           displayName: user.displayName,
           uid: user.uid,
+          following: 0,
+          followings: [],
+          follower: 0,
+          followers: [],
           updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
           });
 
