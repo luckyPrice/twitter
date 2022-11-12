@@ -370,7 +370,7 @@ form {
   padding: 10px 0px;
   font-size: 12px;
   text-align: center;
-  width: 150px;
+  width: 320px;
   background: white;
   cursor: pointer;
 }
@@ -380,12 +380,13 @@ form {
 .authInput {
   max-width: 320px;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 1px;
   color: black;
+  text-align: center;
 }
 
 .authSubmit {
