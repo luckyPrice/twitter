@@ -100,7 +100,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                 console.log(tweetObj.heart);
                 updateDoc(TweetTextRef2, {
                     heartuser: newList,
-                    heart : tweetObj.heart + 1,
+                    heart : heartcount + 1,
                     });
                     console.log(TweetTextRef)
                     setalreadyselected(1)
@@ -112,7 +112,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                 console.log(tweetObj.heart);
                 updateDoc(TweetTextRef2, {
                     heartuser: newList,
-                    heart : tweetObj.heart - 1,
+                    heart : heartcount - 1,
                     });
                     console.log(TweetTextRef2)
                     setalreadyselected(0)
