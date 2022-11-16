@@ -50,29 +50,18 @@ const View = ({userObj, isOwner, destuser, id}) => { // 실제로그인 유저, 
         const FollowingTextRef =doc(dbService, "users", `${id}`);
             console.log(destuser.follow);
             for(i = 0 ; i < destuser.follow ; i++){
-                console.log(destuser.follow);
-                console.log(destuser.follows[i])
-                console.log(userObj.uid)
+                
                 if(destuser.follows[i] == userObj.uid){
                     found = 1;
                     console.log("ok");
                 }
             }
             if(found == 0){ // Follow
-                console.log(destuser)
-                console.log(destuser.follows)
-                console.log(destuser.followings)
-                console.log(userlist)
-                console.log(userObj.uid)
-                console.log(userlist2)
-                console.log(destuser.uid)
+                
                 const newList = userlist.concat(userObj.uid)
                 const newList2 = userlist2.concat(destuser.uid)
-                console.log(newList)
-                console.log(newList2)
-                console.log(destuser.id)
-                console.log(userObj.id)
-                destuser.follow++;
+                
+                destuser.follow++; // follow, following info change
                 destuser.follows = newList;
                 userObj.following++;
                 userObj.followings = newList2;
@@ -90,7 +79,7 @@ const View = ({userObj, isOwner, destuser, id}) => { // 실제로그인 유저, 
             else{ // UnFollow
                 const newList = userlist.filter(sch => sch != userObj.uid)
                 const newList2 = userlist2.filter(sch => sch != destuser.uid)
-                destuser.follow--;
+                destuser.follow--; // follow, following info change
                 destuser.follows = newList;
                 userObj.following--;
                 userObj.followings = newList2;

@@ -12,15 +12,15 @@ import { doc, deleteDoc, updateDoc }from "firebase/firestore";
 
 const Home = ({userObj}) => {
     
-    const [tweet, setTweet] = useState("");
-    const [tweets, setTweets] = useState([]);
+/*     const [tweet, setTweet] = useState("");
+    const [tweets, setTweets] = useState([]); */
     const [attachment, setAttachment] = useState("");
     const [search, setSearch] = useState(false);
     const [users, setUsers] = useState([]);
 
     const auth = getAuth();
     const user = auth.currentUser;
-    const getTweets = async()=>{
+    /* const getTweets = async()=>{
         const dbTweets = query(collection(dbService, "tweets"));
         const querySnapshot = await getDocs(dbTweets);
     querySnapshot.forEach((doc) => {
@@ -31,9 +31,9 @@ const Home = ({userObj}) => {
     }
     setTweets(prev => [tweetObj, ...prev]);
     });
-};  
+}; */  
     useEffect(() => {
-        const q = query(
+        /* const q = query(
             collection(dbService, "tweets"),
             orderBy("createdAt", "desc")
             );
@@ -44,7 +44,7 @@ const Home = ({userObj}) => {
             }));
         setTweets(tweetArr);
             });
-
+ */
             const querySnapshot = query(collection(dbService, "users"));
             console.log(querySnapshot);
             onSnapshot(querySnapshot, (snapshot) => {

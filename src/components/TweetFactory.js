@@ -1,7 +1,7 @@
 import { dbService, storageService } from "fBase";
 import {v4 as uuidv4} from "uuid";
-import {orderBy, onSnapshot, query, getDocs, addDoc, collection } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import {orderBy, onSnapshot, query, getDocs, addDoc, collection, limit, getDocsFromServer, startAt, endAt, startAfter } from "firebase/firestore";
+import React, { useEffect, useState, memo } from "react";
 import Tweet from "components/Tweet";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +10,8 @@ import { updateDoc }from "firebase/firestore";
 import { doc }from "firebase/firestore";
 import {Link} from "react-router-dom";
 import { authService } from "fBase";
+import Loader from "./Loader";
+import { async } from "@firebase/util";
 
 const TweetFactory = ({userObj}) => {
     const [tweet, setTweet] = useState("");
@@ -18,6 +20,10 @@ const TweetFactory = ({userObj}) => {
     const [hashtag, setHashTag] = useState("");
     const [posting, setPosting] = useState(false);
     const [profile, setProfile] = useState(true);
+    const [target, setTarget] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    var firstLoaded=0;
+    var lastdata;
     const onSubmit = async (event) => {
         if (tweet === "") {
             return;
@@ -57,42 +63,106 @@ const TweetFactory = ({userObj}) => {
         setAttachment("");
         togglePosting();
         console.log(posting)
+        window.location.replace("/");
         
     };
-    
 
-    useEffect(() => {
-      const q = query(
+ 
+
+  
+
+  
+    const getMoreTweets = async () => {
+      
+        if(firstLoaded <= 0){
+        let q = query(
           collection(dbService, "tweets"),
-          orderBy("createdAt", "desc")
+          orderBy("createdAt", "desc"),
+          limit(3)
           );
-          onSnapshot(q, (snapshot) => {
-          const tweetArr = snapshot.docs.map((doc) => ({
+        
+        const dbTweets = await getDocs(q);
+        const tweetArr = dbTweets.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           }));
-      setTweets(tweetArr);
-          });
-          console.log("howmany?");
-  }, []);
+        
+        setTweets((tweets) => tweets.concat(tweetArr));
+        console.log(tweetArr[tweetArr.length-1].createdAt);
+        lastdata=tweetArr[tweetArr.length-1].createdAt;
+        firstLoaded++;
+        }
+
+        else{
+          let q = query(
+            collection(dbService, "tweets"),
+            orderBy("createdAt", "desc"),
+            limit(3),
+            startAfter(lastdata)
+            );
+          
+          const dbTweets = await getDocs(q);
+          const tweetArr = dbTweets.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            }));
+          
+          setTweets((tweets) => tweets.concat(tweetArr));
+          lastdata=tweetArr[tweetArr.length-1].createdAt;
+          console.log(tweetArr[tweetArr.length-1].createdAt);
+
+        }
+      
+      
+    };
+
+    const onIntersect = async ([entry], observer) => {
+      
+      if (entry.isIntersecting && !isLoaded) {
+        setIsLoaded(true);
+        observer.unobserve(entry.target);
+        await getMoreTweets();
+        observer.observe(entry.target);
+        setIsLoaded(false);
+      }
+
+    };
+
+    useEffect(() => {
+      let observer;
+      if (target) {
+        observer = new IntersectionObserver(onIntersect, {
+          threshold: 0.4,
+
+        });
+        observer.observe(target);
+      }
+      return () => observer && observer.disconnect();
+    }, [target  ]);
+
+
+
+
     const onChange = (event) =>{
         const {target:{value}, } = event;
         setTweet(value);
-        console.log(value);
+        
 
     };
     const onChange2 = (event) =>{
       const {target:{value}, } = event;
       setTweet(value);
-      console.log(value);
+      
 
   };
   const onChangeHash = (event) =>{
     const {target:{value}, } = event;
     setHashTag(value);
-    console.log(value);
+    
 
 };
+
+    
     
     const onFind = (event) => {
       
@@ -124,7 +194,7 @@ const TweetFactory = ({userObj}) => {
       console.log(tweets.length);
       
     };
-    const togglePosting = () => setPosting(prev => !prev);
+    const togglePosting = () => {setPosting(prev => !prev)};
     
     const onFileChange = (event) => {
         const {target:{files}, } = event;
@@ -221,13 +291,16 @@ const TweetFactory = ({userObj}) => {
           </form>
         <div style={{ marginTop: 30 }}>
 
-          
-            
-            
             {tweets.map((tweet) => (
+              
                 (tweet.count == 1 &&
                 <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid}/>)
+               
             ))}
+
+            <div ref={setTarget} className="Target-Element">
+              {isLoaded && <Loader />}
+            </div>
         </div>
         
         

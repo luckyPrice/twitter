@@ -1,5 +1,5 @@
 import { dbService, storageService } from "fBase";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { doc, deleteDoc, updateDoc }from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {Route} from 'react-router-dom';
@@ -13,21 +13,31 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
     const [editing, setEditing] = useState(false);
     const [newTweet, setNewTweet] = useState(tweetObj.text);
     const [heart, setHeart] = useState(false);
-    const TweetTextRef =doc(dbService, "tweets", `${tweetObj.id}`);
+    const TweetTextRef = doc(dbService, "tweets", `${tweetObj.id}`);
     const [heartuserlist, setHeartuserlist] = useState(tweetObj.heartuser);
     const [tweets, setTweets] = useState([]);
+    const [alreadyselected, setalreadyselected] = useState(0) // 이미 눌려있는지를 확인
+    const [heartcount, setHeartcount] = useState(tweetObj.heart) // 현재 하트카운트를 측정하고 1차원적으로 1을 더하거나 뺌
 
-    useEffect(() => {
+    useEffect(() => { // 초기의 하트 상태
+        
         for(let i = 0 ; i < tweetObj.heart ; i++){
             if(tweetObj.heartuser[i] == currentuser){
                 setHeart(true)
                 console.log("ok");
+                setalreadyselected(1)
+                
             }
         }
+        
+        
     }, []);
 
-    const gotoProfile = (event) => {
-        console.log("input");
+    
+
+    
+
+    const gotoProfile = (event) => { // 미구현
         event.preventDefault();
         
         const q = query(
@@ -45,10 +55,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
             console.log(tweetArr);
             setTweets(tweetArr);
             
-            
-            
             });
-            
             
             console.log(tweets.length);
             
@@ -57,9 +64,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                     updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
                         count: 0,
                         });
-                    console.log("third");
                     console.log(currentuser);
-                    
                     }
                     else{
                         updateDoc(doc(dbService, "tweets", `${tweets[i].id}`), {
@@ -68,14 +73,9 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                         }
                         const p = query(
                             collection(dbService, "users"));
-                        console.log("fourth");
                     }
-            
-        
-
     }
-
-    const onDeleteClick = async () => {
+    const onDeleteClick = async () => { // 삭제후 새로고침
         const ok = window.confirm("Are you sure you want to delete this tweet?");
         console.log(ok);
         if(ok){
@@ -84,37 +84,43 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                 await deleteObject(ref(storageService, tweetObj.attachmentUrl));
             }
         }
+        window.location.replace("/");
     };
+
+    
     const toggleEditing = () => setEditing(prev => !prev);
     const toggleHeart = () => {
-        console.log(tweetObj);
-        let found = 0;
         
-            
-            for(let i = 0 ; i < tweetObj.heart ; i++){
-                if(tweetObj.heartuser[i] == currentuser){
-                    found = 1;
-                    console.log("ok");
-                }
-            }
-            if(found == 0){
+        const TweetTextRef2 = doc(dbService, "tweets", `${tweetObj.id}`);
+        console.log(tweetObj);
+        
+            if(alreadyselected == 0){ // 데이터베이스에 갱신하고 화면갱신
                 const newList = heartuserlist.concat(currentuser)
                 setHeartuserlist(newList)
-                updateDoc(TweetTextRef, {
+                console.log(tweetObj.heart);
+                updateDoc(TweetTextRef2, {
                     heartuser: newList,
                     heart : tweetObj.heart + 1,
                     });
-                
+                    console.log(TweetTextRef)
+                    setalreadyselected(1)
+                    setHeartcount(heartcount + 1)
             }
-            else{
+            else{ // 데이터베이스에 갱신하고 화면갱신
                 const newList = heartuserlist.filter(sch => sch != currentuser)
-                updateDoc(TweetTextRef, {
+                setHeartuserlist(newList)
+                console.log(tweetObj.heart);
+                updateDoc(TweetTextRef2, {
                     heartuser: newList,
                     heart : tweetObj.heart - 1,
                     });
+                    console.log(TweetTextRef2)
+                    setalreadyselected(0)
+                    setHeartcount(heartcount - 1)
             }
-        
         setHeart(prev => !prev);
+        
+      
     };
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -127,6 +133,7 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
     const onChange = (event) => {
         const {target:{value}, } = event;
         setNewTweet(value);
+        window.location.replace("/");
     };
     return(
         <div className="nweet">
@@ -155,25 +162,20 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                 <span onClick={gotoProfile}>
                 <FontAwesomeIcon icon={faUserCircle} color={"#04AAFF"} size="2x" className="profileicon" />
                 </span>
-                <h4 className="favorcount">{tweetObj.heart}</h4>
+                <h4 className="favorcount">{heartcount}</h4>
                 <h3>{tweetObj.hashTag}</h3>
                 {isOwner && (
                 <><div className="nweet__actions">
-                                
                                 <span onClick={onDeleteClick}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </span>
                                 <span onClick={toggleEditing}>
                                     <FontAwesomeIcon icon={faPencilAlt} />
                                 </span>
-                                
-
-
                             </div></>
                 )}
                 <div>
                                     <span onClick={toggleHeart}>
-
                                         {heart ?
                                             <FontAwesomeIcon icon={faHeart}  className="heart"/> :
                                             <FontAwesomeIcon icon={faHeartCircleMinus}  className="heart"/>}
@@ -181,7 +183,6 @@ const Tweet = ({tweetObj, isOwner, currentuser}) => {
                                     </span>
                                 </div>
                 </>
-                
             }
         </div>
     )

@@ -20,10 +20,10 @@ function App() {
         setUserObj({
           displayName: user.displayName,
           uid: user.uid,
-          following: 0,
+          following: 0, // 팔로잉 내가 한사람
           followings: [],
-          follower: 0,
-          followers: [],
+          follow: 0, // 팔로우 해준 사람
+          follows: [],
           updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
           });
 
