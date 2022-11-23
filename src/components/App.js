@@ -16,7 +16,10 @@ function App() {
 
     authService.onAuthStateChanged(async (user)=>{
       if(user){
-        
+        let photo =""
+          if(authService.currentUser.photoURL !== "") {
+            photo = authService.currentUser.photoURL
+          }
         setUserObj({
           displayName: user.displayName,
           uid: user.uid,
@@ -24,7 +27,8 @@ function App() {
           followings: [],
           follow: 0, // 팔로우 해준 사람
           follows: [],
-          updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+          photoURL: photo,
+          updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL }),
           });
 
           
@@ -43,7 +47,8 @@ function App() {
     setUserObj({
       displayName: user.displayName,
       uid: user.uid,
-      updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+      photoUrl: user.photoURL,
+      updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL}),
       });
       
   };

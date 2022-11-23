@@ -45,6 +45,7 @@ const Home = ({userObj}) => {
         setTweets(tweetArr);
             });
  */
+            
             const querySnapshot = query(collection(dbService, "users"));
             console.log(querySnapshot);
             onSnapshot(querySnapshot, (snapshot) => {
@@ -64,9 +65,10 @@ const Home = ({userObj}) => {
                     displayName: user.email,
                     uid: user.uid,
                     following: 0, // 팔로잉 내가 한사람
-                followings: [],
-                follow: 0, // 팔로우 해준 사람
-                follows: [],
+                    followings: [],
+                    follow: 0, // 팔로우 해준 사람
+                    follows: [],
+                    photoUrl: "",
                     };
                 addDoc(collection(dbService, "users"), userObj);
             }
