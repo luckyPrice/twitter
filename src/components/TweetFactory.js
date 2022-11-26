@@ -22,6 +22,7 @@ const TweetFactory = ({userObj}) => {
     const [profile, setProfile] = useState(true);
     const [target, setTarget] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [defURL,setDefURL] = useState("");
     var firstLoaded=0;
     var lastdata;
     const onSubmit = async (event) => {
@@ -55,7 +56,7 @@ const TweetFactory = ({userObj}) => {
             heart: 0,
             heartuser : [],
             view : 0,
-            
+            userURL : userObj.photoURL,
             };
         await addDoc(collection(dbService, "tweets"), tweetObj);
         
@@ -78,7 +79,7 @@ const TweetFactory = ({userObj}) => {
         let q = query(
           collection(dbService, "tweets"),
           orderBy("createdAt", "desc"),
-          limit(3)
+          limit(5)
           );
         
         const dbTweets = await getDocs(q);
@@ -88,7 +89,6 @@ const TweetFactory = ({userObj}) => {
           }));
         
         setTweets((tweets) => tweets.concat(tweetArr));
-        console.log(tweetArr[tweetArr.length-1].createdAt);
         lastdata=tweetArr[tweetArr.length-1].createdAt;
         firstLoaded++;
         }
@@ -97,7 +97,7 @@ const TweetFactory = ({userObj}) => {
           let q = query(
             collection(dbService, "tweets"),
             orderBy("createdAt", "desc"),
-            limit(3),
+            limit(5),
             startAfter(lastdata)
             );
           
@@ -109,8 +109,6 @@ const TweetFactory = ({userObj}) => {
           
           setTweets((tweets) => tweets.concat(tweetArr));
           lastdata=tweetArr[tweetArr.length-1].createdAt;
-          console.log(tweetArr[tweetArr.length-1].createdAt);
-
         }
       
       
@@ -129,6 +127,10 @@ const TweetFactory = ({userObj}) => {
     };
 
     useEffect(() => {
+      getDownloadURL(ref(storageService, 'images/default.jpg')).then((url) => {
+        setDefURL(url)
+      })
+
       let observer;
       if (target) {
         observer = new IntersectionObserver(onIntersect, {
@@ -292,9 +294,8 @@ const TweetFactory = ({userObj}) => {
         <div style={{ marginTop: 30 }}>
 
             {tweets.map((tweet) => (
-              
                 (tweet.count == 1 &&
-                <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid}/>)
+                <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid} defprofile = {defURL}/>)
                
             ))}
 

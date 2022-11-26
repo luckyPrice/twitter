@@ -68,7 +68,7 @@ const Home = ({userObj}) => {
                     followings: [],
                     follow: 0, // 팔로우 해준 사람
                     follows: [],
-                    photoUrl: "",
+                    photoURL: "",
                     };
                 addDoc(collection(dbService, "users"), userObj);
             }
