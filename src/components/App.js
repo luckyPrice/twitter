@@ -15,6 +15,7 @@ function App() {
     
 
     authService.onAuthStateChanged(async (user)=>{
+      console.log(user)
       if(user){
         let photo =""
           if(authService.currentUser.photoURL !== "") {
@@ -28,6 +29,7 @@ function App() {
           follow: 0, // 팔로우 해준 사람
           follows: [],
           photoURL: photo,
+          name:user.name,
           updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL }),
           });
 
@@ -48,7 +50,8 @@ function App() {
       displayName: user.displayName,
       uid: user.uid,
       photoUrl: user.photoURL,
-      updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL}),
+      name:user.name,
+      updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL, name:user.name}),
       });
       
   };

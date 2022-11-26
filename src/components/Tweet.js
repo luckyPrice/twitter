@@ -1,6 +1,6 @@
 import { dbService, storageService } from "fBase";
 import React, { useEffect, useState, useRef } from "react";
-import { doc, deleteDoc, updateDoc }from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc }from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {Route} from 'react-router-dom';
 import styled, {css} from "styled-components";
@@ -169,7 +169,7 @@ const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
                         height:30
                     }}
                      /> 
-                    <h4 style={{marginLeft:40}}>{tweetObj.user}</h4>
+                    <h4 style={{marginLeft:40}}>{tweetObj.name? tweetObj.name : "username"}<br/>{tweetObj.user}</h4>
                 </div>
                 <h4 className="textview">{tweetObj.text}</h4>
                 {tweetObj.attachmentUrl && <img src={tweetObj.attachmentUrl} className="pic" />}

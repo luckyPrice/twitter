@@ -55,6 +55,7 @@ const TweetFactory = ({userObj}) => {
             user: authService.currentUser.email,
             heart: 0,
             heartuser : [],
+            name: userObj.displayName,
             view : 0,
             userURL : userObj.photoURL,
             };
@@ -130,7 +131,7 @@ const TweetFactory = ({userObj}) => {
       getDownloadURL(ref(storageService, 'images/default.jpg')).then((url) => {
         setDefURL(url)
       })
-
+      console.log(userObj)
       let observer;
       if (target) {
         observer = new IntersectionObserver(onIntersect, {
