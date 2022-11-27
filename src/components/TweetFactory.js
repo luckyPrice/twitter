@@ -1,6 +1,6 @@
 import { dbService, storageService } from "fBase";
 import {v4 as uuidv4} from "uuid";
-import {orderBy, onSnapshot, query, getDocs, addDoc, collection, limit, getDocsFromServer, startAt, endAt, startAfter } from "firebase/firestore";
+import {orderBy, onSnapshot, query, getDocs, addDoc, collection, limit, where, getDocsFromServer, startAt, endAt, startAfter } from "firebase/firestore";
 import React, { useEffect, useState, memo } from "react";
 import Tweet from "components/Tweet";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
@@ -11,6 +11,7 @@ import { doc }from "firebase/firestore";
 import {Link} from "react-router-dom";
 import { authService } from "fBase";
 import Loader from "./Loader";
+import FriendsProfile from "./FriendsProfile";
 import { async } from "@firebase/util";
 
 const TweetFactory = ({userObj}) => {
@@ -23,6 +24,9 @@ const TweetFactory = ({userObj}) => {
     const [target, setTarget] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [defURL,setDefURL] = useState("");
+    const [firendsProfile, setFriendsProfile] = useState(false);
+    const [tweetUser, setTweetUser] = useState("");
+    const [userProfile, setUserProfile] = useState([]);
     var firstLoaded=0;
     var lastdata;
     const onSubmit = async (event) => {
@@ -72,7 +76,30 @@ const TweetFactory = ({userObj}) => {
  
 
   
+    const gotoProfile = (creatorId) => {
+      console.log(creatorId)
+        setTweetUser(creatorId)
+        setProfile(false)
+        setPosting(false)
+        setFriendsProfile(true)
+        getUserData(creatorId)
+    }
 
+    const getUserData = async (creatorId) => {
+      const uid = creatorId
+      console.log(uid)
+      const userRef = collection(dbService, "users")
+      const q = query(userRef, where("uid", "==", uid))
+
+      const data = await getDocs(q);
+
+      const dataArr = data.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        }));
+        
+        setUserProfile(dataArr)
+    }
   
     const getMoreTweets = async () => {
       
@@ -198,7 +225,7 @@ const TweetFactory = ({userObj}) => {
       
     };
     const togglePosting = () => {setPosting(prev => !prev)};
-    
+
     const onFileChange = (event) => {
         const {target:{files}, } = event;
         const theFile = files[0];
@@ -296,7 +323,7 @@ const TweetFactory = ({userObj}) => {
 
             {tweets.map((tweet) => (
                 (tweet.count == 1 &&
-                <Tweet key={tweet.id} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid} defprofile = {defURL}/>)
+                <Tweet key={tweet.id} gotoProfile = {gotoProfile} tweetObj={tweet} isOwner = {tweet.creatorId === userObj.uid} currentuser = {userObj.uid} defprofile = {defURL}/>)
                
             ))}
 
@@ -307,7 +334,12 @@ const TweetFactory = ({userObj}) => {
         
         
     </>
-    : 
+    : firendsProfile ?
+    <>
+      <FriendsProfile user={userProfile[0]}/>
+    </>
+    :
+
     <>
     </>
     )

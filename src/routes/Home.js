@@ -1,6 +1,6 @@
 import { dbService, storageService } from "fBase";
 import {v4 as uuidv4} from "uuid";
-import {orderBy, onSnapshot, query, getDocs, addDoc, collection } from "firebase/firestore";
+import {orderBy, onSnapshot, query, getDocs, addDoc,setDoc,  collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Tweet from "components/Tweet";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
@@ -68,10 +68,9 @@ const Home = ({userObj}) => {
                     followings: [],
                     follow: 0, // 팔로우 해준 사람
                     follows: [],
-                    name:user.name,
                     photoURL: user.photoURL,
                     };
-                addDoc(collection(dbService, "users"), userObj);
+                setDoc(doc(dbService, "users", user.uid), userObj);
             }
            // setUsers(userArr);
         });

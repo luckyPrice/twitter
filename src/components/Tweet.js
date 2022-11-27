@@ -10,7 +10,7 @@ import { faUser, faUserCircle, faHeart } from "@fortawesome/free-solid-svg-icons
 import {Link} from "react-router-dom";
 import {orderBy, onSnapshot, query, getDocs, addDoc, collection } from "firebase/firestore";
 
-const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
+const Tweet = ({gotoProfile, tweetObj, isOwner, currentuser, defprofile}) => {
     const [editing, setEditing] = useState(false);
     const [newTweet, setNewTweet] = useState(tweetObj.text);
     const [heart, setHeart] = useState(false);
@@ -21,7 +21,7 @@ const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
     const [heartcount, setHeartcount] = useState(tweetObj.heart) // 현재 하트카운트를 측정하고 1차원적으로 1을 더하거나 뺌
 
     useEffect(() => { // 초기의 하트 상태
-        
+
         for(let i = 0 ; i < tweetObj.heart ; i++){
             if(tweetObj.heartuser[i] == currentuser){
                 setHeart(true)
@@ -36,7 +36,7 @@ const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
 
 
     
-
+    /*
     const gotoProfile = (event) => { // 미구현
         event.preventDefault();
         
@@ -75,6 +75,7 @@ const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
                             collection(dbService, "users"));
                     }
     }
+    */
     const onDeleteClick = async () => { // 삭제후 새로고침
         const ok = window.confirm("Are you sure you want to delete this tweet?");
         console.log(ok);
@@ -157,7 +158,7 @@ const Tweet = ({tweetObj, isOwner, currentuser, defprofile}) => {
                 </>
                  :
                 <>
-                <div>
+                <div onClick={()=>gotoProfile(tweetObj.creatorId)}>
             
                      <img   
                      src={tweetObj.userURL ? tweetObj.userURL : defprofile}
