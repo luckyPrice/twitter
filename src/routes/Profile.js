@@ -99,8 +99,8 @@ export default ({refreshUser, userObj}) => {
 
 
     useEffect(() => {
+      setAttachment(userObj.photoURL)
       if(!fchanged){
-        setAttachment(userObj.photoURL)
         setFchanged(true)
         setDefaultURL(userObj.photoURL)
       }

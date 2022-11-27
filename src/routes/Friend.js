@@ -18,10 +18,14 @@ const Friend = ({userObj}) => {
     const [tweets, setTweets] = useState([])
     const [viewing, setViewing] = useState(true)
     const [destuser, Setdestuser] = useState(null)
+    const [defURL,setDefURL] = useState("");
     var id = "";
     
     
     useEffect(() => {
+        getDownloadURL(ref(storageService, 'images/default.jpg')).then((url) => {
+            setDefURL(url)
+          })
         const q = query(
             collection(dbService, "users"),
             
@@ -75,11 +79,19 @@ const Friend = ({userObj}) => {
         <>
         <div>
             {users.map((user) =>
-            <><div>
-            <span onClick={() => profile(user)}>
-            <FontAwesomeIcon icon={faUserCircle} color={"#04AAFF"} size="2x" className="profileicon2" />
-            </span>
-            {user.displayName}</div>
+            <><div onClick={() => profile(user)}>
+                
+                <img   
+                     src={user.photoURL ? user.photoURL : defURL}
+                     style={{
+                        marginBottom:-10,
+                        borderRadius:100,
+                        width:30,
+                        height:30
+                    }}
+                     /> 
+                &nbsp;&nbsp;&nbsp;    {user.displayName}
+            </div>
             <br></br>
             </>)}
 

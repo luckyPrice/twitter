@@ -34,11 +34,39 @@ const FirendsProfile = ({user}) => {
       });
 
     return (
-        <>
+        user ? 
+        <div className="container">
+        
+  
+  
+        
+          {user.photoURL && (
+          <div className="factoryForm__attachment">
+          <img
+          src={user.photoURL}
+          style={{
+            backgroundImage: user.photoURL,
+            marginLeft: 120,
+          }}
+          />
+          </div>
+          )}
+  
+          <h4>name : {user.displayName ? user.displayName: "username"}</h4>
+          <br/>
+          <h4>email : {user.email ? user.email : "email"} </h4>
+          <br/>
+          <h4>following : {user.follwing ? user.following : "0"}</h4>
+          <br/>
+          <h4>follow : {user.follow ? user.follow : "0"}</h4>
+          {console.log(user)}
 
-        </>
+      </div>
 
-
+          :<>
+          
+          <h4>User does not exitst.</h4>
+          </>
     );
 }
 

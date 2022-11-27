@@ -154,6 +154,13 @@ const TweetFactory = ({userObj}) => {
 
     };
 
+    const backToPost = () => {
+        setProfile(true)
+        setPosting(false)
+        setFriendsProfile(false)
+    }
+
+
     useEffect(() => {
       getDownloadURL(ref(storageService, 'images/default.jpg')).then((url) => {
         setDefURL(url)
@@ -337,6 +344,10 @@ const TweetFactory = ({userObj}) => {
     : firendsProfile ?
     <>
       <FriendsProfile user={userProfile[0]}/>
+      <br/>
+      <span onClick={backToPost} className="postBtn">
+          Back To Post
+        </span>
     </>
     :
 

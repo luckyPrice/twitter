@@ -62,7 +62,7 @@ const Home = ({userObj}) => {
             }
             if(find == 0){
                 const userObj = {
-                    displayName: user.email,
+                    displayName: user.displayName,
                     uid: user.uid,
                     following: 0, // 팔로잉 내가 한사람
                     followings: [],
