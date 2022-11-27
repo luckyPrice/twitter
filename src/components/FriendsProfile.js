@@ -28,12 +28,12 @@ const FriendsProfile = ({curruser, user}) => {
     } */
 
     const isNotMe = () => {
-        console.log(curruser)
-        console.log(user)
-        if (curruser.uid != user.uid){
-            return true;
+        console.log(curruser.uid)
+        console.log(user.uid)
+        if (curruser.uid == user.uid){
+            return false;
         }
-        else return false;
+        else return true;
 
     }
     useEffect(() => {
@@ -69,7 +69,7 @@ const FriendsProfile = ({curruser, user}) => {
           <br/>
           <h4>follow : {user.follow ? user.follow : "0"}</h4>
           <br/>
-           {isNotMe ? 
+           {isNotMe() ? 
             <View userObj={curruser} destuser={user}/>
              :
             null
