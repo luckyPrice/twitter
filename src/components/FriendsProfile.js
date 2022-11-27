@@ -9,8 +9,8 @@ import { faTrash, faPencilAlt, faHeartBroken, faHeartCircleMinus, faPersonWalkin
 import { faUser, faUserCircle, faHeart } from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 import {orderBy, onSnapshot, query, getDocs, addDoc, collection, where } from "firebase/firestore";
-
-const FirendsProfile = ({user}) => {
+import View from "./View";
+const FriendsProfile = ({curruser, user}) => {
 /*     const getUserData = async () => {
         const uid = user.user
         console.log(uid)
@@ -27,10 +27,19 @@ const FirendsProfile = ({user}) => {
         console.log(dataArr[0])
     } */
 
+    const isNotMe = () => {
+        console.log(curruser)
+        console.log(user)
+        if (curruser.uid != user.uid){
+            return true;
+        }
+        else return false;
 
+    }
     useEffect(() => {
         //getUserData()
         console.log(user)
+        console.log(curruser)
       });
 
     return (
@@ -59,9 +68,14 @@ const FirendsProfile = ({user}) => {
           <h4>following : {user.follwing ? user.following : "0"}</h4>
           <br/>
           <h4>follow : {user.follow ? user.follow : "0"}</h4>
-          {console.log(user)}
-
-      </div>
+          <br/>
+           {isNotMe ? 
+            <View userObj={curruser} destuser={user}/>
+             :
+            null
+            } 
+        <br/><br/><br/>
+         </div>
 
           :<>
           
@@ -70,4 +84,4 @@ const FirendsProfile = ({user}) => {
     );
 }
 
-export default FirendsProfile;
+export default FriendsProfile;

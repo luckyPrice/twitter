@@ -343,7 +343,7 @@ const TweetFactory = ({userObj}) => {
     </>
     : firendsProfile ?
     <>
-      <FriendsProfile user={userProfile[0]}/>
+      <FriendsProfile curruser={userObj} user={userProfile[0]}/>
       <br/>
       <span onClick={backToPost} className="postBtn">
           Back To Post

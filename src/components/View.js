@@ -11,7 +11,7 @@ import { faArrowDownUpAcrossLine } from "@fortawesome/free-solid-svg-icons";
 
 
 
-const View = ({userObj, isOwner, destuser, id}) => { // 실제로그인 유저, 일치하는가, 상대방
+const View = ({userObj, destuser}) => { // 실제로그인 유저, 일치하는가, 상대방
     const [users, setUsers] = useState([])
     const [userlist, setuserlist] = useState(destuser.follows);
     const [userlist2, setuserlist2] = useState(userObj.followings);
@@ -101,22 +101,6 @@ const View = ({userObj, isOwner, destuser, id}) => { // 실제로그인 유저, 
     return(
     
     <>
-        <form>
-            <div>
-            <table>
-                <tr><th>hello</th></tr>
-                <tr>
-                <td>follower</td>
-                <td>following</td>
-                
-
-                </tr>
-                
-                </table>
-                </div>
-                </form>
-                
-               
                 <form>
                 <div>
                 <span onClick={onFollow} className="followBtn">

@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPencilAlt, faHeartBroken, faHeartCircleMinus, faPersonWalkingDashedLineArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faUserCircle, faHeart } from "@fortawesome/free-solid-svg-icons";
 import View from "components/View";
-
+import FriendsProfile from "components/FriendsProfile";
 
 const Friend = ({userObj}) => {
     const [users, setUsers] = useState([])
@@ -100,7 +100,11 @@ const Friend = ({userObj}) => {
         :
         <>
         <div>
-           <View userObj={userObj} isUser={userObj.uid === destuser.uid} destuser={destuser} id = {id}/>
+            <FriendsProfile curruser={userObj} user={destuser}/>
+            <br/><br/><br/>
+            <span onClick={toggleViewing} className="postBtn">
+          Back To List
+        </span>
         </div>
         </>
     )
