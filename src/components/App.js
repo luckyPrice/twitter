@@ -29,6 +29,7 @@ function App() {
           follow: 0, // 팔로우 해준 사람
           follows: [],
           photoURL: photo,
+          email: authService.currentUser.email,
           updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL }),
           });
 

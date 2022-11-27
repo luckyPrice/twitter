@@ -69,8 +69,9 @@ const Home = ({userObj}) => {
                     follow: 0, // 팔로우 해준 사람
                     follows: [],
                     photoURL: user.photoURL,
+                    email: user.email,
                     };
-                setDoc(doc(dbService, "users", user.uid), userObj);
+                    setDoc(doc(dbService,"users", userObj.uid),userObj)
             }
            // setUsers(userArr);
         });
