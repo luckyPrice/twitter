@@ -49,7 +49,7 @@ function App() {
     setUserObj({
       displayName: user.displayName,
       uid: user.uid,
-      photoUrl: user.photoURL,
+      photoURL: user.photoURL,
       updateProfile: (args) => updateProfile(user, { displayName: user.displayName, photoURL: user.photoURL}),
       });
       

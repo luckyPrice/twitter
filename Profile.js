@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {authService, dbService, storageService} from "fBase";
 import { useHistory } from "react-router-dom";
-import { collection, getDocs, query, setDoc, where, doc } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { updateProfile } from "@firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +20,19 @@ export default ({refreshUser, userObj}) => {
       history.push("/");
       
     };
-
+    /*const getMyTweets = async() => {
+      const q = query(
+        collection(dbService, "tweets"),
+        where("creatorId", "==", userObj.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        });
+        };
+    useEffect(() => {
+      getMyTweets();
+    }, []);*/
 
     const onChange = (event) => {
       const {
@@ -45,25 +57,12 @@ export default ({refreshUser, userObj}) => {
       console.log(files)
     };
 
-    const updateDisplayObj = (obj, newDisplay) =>{
-      const tempObj = {...obj, displayName: newDisplay}
-      delete tempObj.updateProfile
-      return tempObj;
-    }
-
-    const updatePhotoObj = (obj, newURL) =>{
-      const tempObj = {...obj, photoURL:newURL}
-      delete tempObj.updateProfile
-      return tempObj;
-    }
 
     const onSubmit = async (event) => {
       event.preventDefault();
       if(userObj.displayName !== newDisplayName){
         await updateProfile(authService.currentUser, { displayName: newDisplayName });
         refreshUser();
-        setDoc(doc(dbService,"users",userObj.uid),updateDisplayObj(userObj, newDisplayName))
-        
         }
 
       if(attachment !== userObj.photoURL){
@@ -74,29 +73,23 @@ export default ({refreshUser, userObj}) => {
         if(attachment !== defaultURL){
           response = await uploadString(attachmentRef, attachment, "data_url");
           profileURL = await getDownloadURL(response.ref);
-          setAttachment(profileURL)
         }
 
         await updateProfile(authService.currentUser, { photoURL: profileURL });
         refreshUser();
-        setDoc(doc(dbService,"users",userObj.uid),updatePhotoObj(userObj, profileURL))
-        
+        console.log(userObj.photoURL)
       }
-
     };
     
     const onDefaultClick = () => setAttachment(defaultURL)
 
 
     useEffect(() => {
-      
       if(!fchanged){
         setAttachment(userObj.photoURL)
         setFchanged(true)
         setDefaultURL(userObj.photoURL)
       }
-
-      console.log(attachment)
     });
 
     return (
@@ -105,7 +98,6 @@ export default ({refreshUser, userObj}) => {
 
 
 
-       
       {attachment && (
         <div className="factoryForm__attachment">
         <img
@@ -121,7 +113,6 @@ export default ({refreshUser, userObj}) => {
         </div>
         </div>
         )}
-        
 
       <p>
           <label htmlFor="attach-file" className="factoryInput__label">
